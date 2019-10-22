@@ -57,7 +57,7 @@ public class GetMarketPriceHandlerIntegrationTest {
         Assert.assertTrue(expectedBody.equals(output.getBody()));
     }
     
-    //@Test
+    @Test
     public void testGetMarketPriceHandlerFetch() {
     	GetMarketPriceHandler handler = new GetMarketPriceHandler();
         Context ctx = createContext();
@@ -78,6 +78,7 @@ public class GetMarketPriceHandlerIntegrationTest {
     	queryParams.put("start_date", "2019-10-21 00:00");
     	queryParams.put("end_date", "2019-10-21 12:00");
     	queryParams.put("region", "NSW1");
+    	queryParams.put("type", "5-min");
     	request.setQueryStringParameters(queryParams);
         ApiGatewayProxyResponse output = handler.handleRequest(request, ctx);
 

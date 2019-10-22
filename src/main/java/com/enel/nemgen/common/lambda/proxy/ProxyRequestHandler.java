@@ -174,6 +174,13 @@ public abstract class ProxyRequestHandler implements RequestHandler<ApiGatewayPr
 		return ResponseWrapper.getSimpleMessageWrapper(responseCode, message).toJson();
 	}
 	
+	public static ApiGatewayProxyResponse getSimpleSuccessResponse(String message) {
+		return new ApiGatewayProxyResponseBuilder()
+            .withStatusCode(HttpCodes.OK)
+            .withBody(getSimpleSuccessMessageBody(message))
+            .build(); 
+	}
+	
 	public static ApiGatewayProxyResponse getSuccessResponse(Object result) {
 		return new ApiGatewayProxyResponseBuilder()
             .withStatusCode(HttpCodes.OK)
@@ -279,7 +286,6 @@ public abstract class ProxyRequestHandler implements RequestHandler<ApiGatewayPr
 			Logger.logError("setEnvironment", "An error occurred during initialisation of the configuration manager. Check that the lambda configuration is correct for the environment and that the configuration provider is valid.");
 			throw new Exception("Failed to load configuration settings");
 		}
-		
 	}
 	
 }

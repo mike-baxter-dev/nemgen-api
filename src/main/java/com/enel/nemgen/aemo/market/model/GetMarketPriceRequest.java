@@ -8,14 +8,17 @@ public class GetMarketPriceRequest {
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private String region;
+	private String type;
 	
 	public GetMarketPriceRequest(
 			LocalDateTime startDate, 
 			LocalDateTime endDate,
-			String region) {
+			String region,
+			String type) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.region = region;
+		this.type = type;
 	}
 	
 	public LocalDateTime getStartDate() {
@@ -28,6 +31,10 @@ public class GetMarketPriceRequest {
 	
 	public String getRegion() {
 		return region;
+	}
+	
+	public String getType() {
+		return type;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ public class MarketPriceService implements IMarketPriceService{
 	public static final String PARAM_START_DATE = "start_date";
 	public static final String PARAM_END_DATE = "end_date";
 	public static final String PARAM_REGION = "region";
+	public static final String PARAM_TYPE = "type";
 	
 	public IMarketPriceRepository getRepository() {
 		return new MarketPriceDao();
@@ -35,11 +36,23 @@ public class MarketPriceService implements IMarketPriceService{
 		if(!ed.isValid()) {
 			return ValidationResult.getFailedResult(ErrorCodes.INVALID_PARAMETER_VALUE, "Parameter end_date was not in the expected format");
 		}
-		return ValidationResult.getValidResult(new GetMarketPriceRequest(sd.getResult(), ed.getResult(), queryParams.get(PARAM_REGION)));
+		String type = queryParams.get(PARAM_TYPE);
+		if(type.equals("")){
+			return ValidationResult.getFailedResult(ErrorCodes.INVALID_PARAMETER_VALUE, "Parameter type was not one of the expected values");
+		}
+		return ValidationResult.getValidResult(new GetMarketPriceRequest(sd.getResult(), ed.getResult(), queryParams.get(PARAM_REGION), type));
 	}
 	
 	public ApiGatewayProxyResponse getMarketPrice(GetMarketPriceRequest request){
-		List<MarketPrice> prices = getRepository().getMarketPrice(request);
+		List<MarketPrice> prices = null;
+		switch(request.getType()) {
+			case "5-min":{
+				prices = getRepository().getMarketPrice5Min(request);
+			}
+			case "30-min":{
+				prices = getRepository().getMarketPrice30Min(request);
+			}
+		}
 		if(prices == null) {
 			Logger.logError("MarketPriceService.getMarketPrice", "Failed to get the Market Prices for request parameters: "+request.toString());
 			return ProxyRequestHandler.getInternalErrorResponse();

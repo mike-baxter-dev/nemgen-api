@@ -11,7 +11,19 @@ import com.enel.nemgen.common.dao.Logger;
 
 public class MarketPriceDao extends CommonDao implements IMarketPriceRepository{
 	
-	public List<MarketPrice> getMarketPrice(GetMarketPriceRequest request){
+	public List<MarketPrice> getMarketPrice5Min(GetMarketPriceRequest request){
+		String sql = "SELECT settlementdate, regionid, periodid, rrp\r\n" + 
+				"FROM mms_owner.tradingprice\r\n" + 
+				"WHERE settlementdate >= ? AND settlementdate >= ? AND regionid = ?\r\n" +
+				"ORDER BY periodid";
+		;
+	    return getDbAdapter().executeQuery(
+	    		sql, super.getParamList(request.getStartDate(), request.getEndDate(), request.getRegion()), 
+	    		"MarketPriceDao.getMarketPrice", 
+	    		MarketPriceDao::processMarketPriceResults);
+	}
+	
+	public List<MarketPrice> getMarketPrice30Min(GetMarketPriceRequest request){
 		String sql = "SELECT settlementdate, regionid, periodid, rrp\r\n" + 
 				"FROM mms_owner.tradingprice\r\n" + 
 				"WHERE settlementdate >= ? AND settlementdate >= ? AND regionid = ?\r\n" +
